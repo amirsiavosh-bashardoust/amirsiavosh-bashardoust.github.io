@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amirsiavosh Bashardoust</title>
+<meta name="description" content="Amirsiavosh Bashardoust, doctoral researcher at HEC Lausanne studying how AI changes the way organisations decide, learn and organise work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens: lapis, saffron, turquoise ---------- */
+:root{
+  --paper:#F5F6F1;
+  --surface:#FFFFFF;
+  --ink:#1A1D2E;
+  --muted:#5B6075;
+  --line:#DCDFE6;
+  --lapis:#1F3A93;
+  --lapis-soft:#E6EBF8;
+  --saffron:#E9A200;
+  --turquoise:#1E9C93;
+  --shadow:0 1px 0 rgba(26,29,46,.06), 0 8px 24px -12px rgba(31,58,147,.25);
+  --display:"Bricolage Grotesque", system-ui, sans-serif;
+  --body:"Source Serif 4", Georgia, serif;
+  --r-lg:18px; --r-sm:8px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1530; --surface:#16204A; --ink:#EEF0F7; --muted:#A9B0CC; --line:#2A3566;
+    --lapis:#8FA8FF; --lapis-soft:#1D2A5C; --saffron:#FFC23D; --turquoise:#4FD1C5;
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1530; --surface:#16204A; --ink:#EEF0F7; --muted:#A9B0CC; --line:#2A3566;
+  --lapis:#8FA8FF; --lapis-soft:#1D2A5C; --saffron:#FFC23D; --turquoise:#4FD1C5;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--lapis);text-underline-offset:3px}
+a:hover{color:var(--turquoise)}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0}
+h2{font-size:clamp(1.7rem,3.2vw,2.3rem);font-weight:800;letter-spacing:-.02em;margin-bottom:1.25rem}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0 0 1rem;max-width:68ch}
+.muted{color:var(--muted)}
+button{font:inherit;cursor:pointer}
+
+/* ---------- Layout ---------- */
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr);gap:48px;max-width:1240px;margin:0 auto;padding:32px 24px 80px}
+@media (max-width:960px){.shell{grid-template-columns:1fr;gap:24px;padding:16px 16px 64px}}
+
+/* ---------- Player card (sidebar) ---------- */
+.player{position:sticky;top:24px;align-self:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px;box-shadow:var(--shadow)}
+@media (max-width:960px){.player{position:static}}
+.player-top{display:flex;align-items:center;gap:14px}
+.avatar{width:56px;height:56px;border-radius:14px;background:conic-gradient(from 200deg,var(--lapis),var(--turquoise),var(--saffron),var(--lapis));display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#fff;font-size:1.3rem;border:none;flex:none}
+.player h1{font-size:1.15rem;font-weight:800}
+.player .role{font-size:.9rem;color:var(--muted);line-height:1.35}
+.nav{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:2px}
+.nav a{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:var(--r-sm);color:var(--ink);text-decoration:none;font-family:var(--display);font-size:.95rem}
+.nav a:hover{background:var(--lapis-soft);color:var(--ink)}
+.nav a.seen::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--turquoise)}
+.nav a.active{background:var(--lapis-soft)}
+@media (max-width:960px){.nav{grid-template-columns:repeat(3,1fr)}.nav a{justify-content:center;gap:6px;font-size:.85rem;padding:6px}}
+.player-foot{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:5px 12px;font-family:var(--display);font-size:.85rem;text-decoration:none}
+.chip:hover{border-color:var(--lapis);color:var(--lapis)}
+
+/* ---------- Main ---------- */
+main section{padding:56px 0 8px;scroll-margin-top:16px}
+main section:first-child{padding-top:8px}
+
+/* Hero */
+.hero{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--lapis);color:#fff;min-height:560px;display:flex;flex-direction:column;justify-content:flex-end}
+:root[data-theme="dark"] .hero{background:#1B2A6B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hero{background:#1B2A6B}}
+#sim{position:absolute;inset:0;width:100%;height:100%}
+.hero-copy{position:relative;padding:32px;background:linear-gradient(180deg,rgba(10,18,52,0),rgba(10,18,52,.88) 38%)}
+.hero h2{font-size:clamp(2.1rem,5vw,3.6rem);color:#fff;max-width:16ch;margin-bottom:.75rem;font-weight:800}
+.hero p{color:#D9E0FF;max-width:56ch}
+
+/* Profile */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:24px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.fact strong{display:block;font-family:var(--display);font-size:1.6rem;color:var(--lapis);line-height:1.1}
+.fact span{font-size:.9rem;color:var(--muted)}
+
+/* Publications */
+.pubs{display:grid;gap:12px}
+.pub{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--lapis);border-radius:12px;padding:16px 18px}
+.pub .venue{font-family:var(--display);font-size:.85rem;color:var(--turquoise);font-weight:600}
+.pub h3{margin:4px 0 6px;font-size:1.08rem}
+.pub .authors{font-size:.95rem;color:var(--muted);margin:0}
+.pub .authors b{color:var(--ink);font-weight:600}
+.pub details{margin-top:8px}
+.pub summary{font-family:var(--display);font-size:.88rem;color:var(--lapis);cursor:pointer;width:max-content}
+.pub details p{font-size:.95rem;margin-top:8px}
+.year-tag{float:right;font-family:var(--display);font-size:.85rem;color:var(--muted)}
+
+/* Quests (projects) */
+.quests{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.quest{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.quest.main{grid-column:1/-1;border:2px solid var(--saffron)}
+.status{align-self:flex-start;font-family:var(--display);font-size:.8rem;padding:2px 10px;border-radius:99px;background:var(--lapis-soft);color:var(--lapis);font-weight:600}
+.status.done{background:color-mix(in srgb,var(--turquoise) 16%,transparent);color:var(--turquoise)}
+.status.boss{background:color-mix(in srgb,var(--saffron) 22%,transparent);color:#9A6A00}
+:root[data-theme="dark"] .status.boss{color:var(--saffron)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .status.boss{color:var(--saffron)}}
+.quest p{font-size:.95rem;margin:0}
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:4px}
+.stats div{font-family:var(--display);font-size:.85rem;color:var(--muted)}
+.stats b{display:block;font-size:1.25rem;color:var(--ink)}
+
+/* Game */
+.game{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow)}
+.game-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-family:var(--display)}
+.timer{height:6px;background:var(--lapis-soft);border-radius:99px;overflow:hidden;margin:12px 0 18px}
+.timer span{display:block;height:100%;width:100%;background:var(--saffron);border-radius:99px}
+.q{font-size:1.3rem;margin:0 0 16px;max-width:40ch}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:600px){.opts{grid-template-columns:1fr}}
+.opt{text-align:left;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:12px 14px;font-family:var(--display);font-size:.98rem;transition:border-color .2s, transform .12s}
+.opt:hover:not(:disabled){border-color:var(--lapis);transform:translateY(-1px)}
+.opt:disabled{cursor:default}
+.opt.right{border:2px solid var(--turquoise);background:color-mix(in srgb,var(--turquoise) 14%,var(--paper))}
+.opt.wrong{border:2px solid #C2410C;background:color-mix(in srgb,#C2410C 10%,var(--paper));animation:miss .35s}
+@keyframes miss{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.explain{margin:14px 0;font-size:.98rem;min-height:1.5em}
+.explain b{font-family:var(--display)}
+.btn{background:var(--lapis);color:#fff;border:none;border-radius:99px;padding:9px 18px;font-family:var(--display);font-weight:600}
+:root[data-theme="dark"] .btn{color:#0E1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{color:#0E1530}}
+.btn:hover{filter:brightness(1.1)}
+.verdict{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--lapis-soft);display:none}
+.verdict.show{display:block}
+
+/* Timeline */
+.timeline{list-style:none;margin:0;padding:0 0 0 22px;border-left:2px solid var(--line)}
+.timeline li{position:relative;padding:0 0 22px}
+.timeline li::before{content:"";position:absolute;left:-29px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--lapis)}
+.timeline li.now::before{background:var(--saffron);border-color:var(--saffron)}
+.when{font-family:var(--display);font-size:.85rem;color:var(--muted)}
+.timeline h3{margin:2px 0 4px}
+.timeline p{font-size:.95rem;margin:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+.subhead{font-family:var(--display);font-size:1.05rem;font-weight:600;color:var(--lapis);margin:0 0 14px}
+
+/* Lists */
+.plain{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.plain li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.95rem}
+.plain li b{font-family:var(--display);font-weight:600}
+.amt{float:right;font-family:var(--display);color:var(--turquoise);font-weight:600;margin-left:10px}
+
+/* Personal */
+.side-quests{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:8px}
+@media (max-width:600px){.side-quests{grid-template-columns:1fr}}
+.side{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.side-ico{font-size:1.8rem;display:block;margin-bottom:6px}
+.side h3{margin-bottom:6px}
+.side p{font-size:.95rem;margin:0}
+.hint{font-size:.9rem;font-style:italic;margin-top:16px}
+
+/* Skills */
+.tree{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.branch{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.skill{margin:10px 0 0;font-size:.95rem}
+.pips{display:flex;gap:3px;margin-top:4px}
+.pips i{flex:1;height:6px;border-radius:3px;background:var(--lapis-soft)}
+.pips i.f{background:var(--lapis)}
+
+/* Contact */
+.contact{background:var(--lapis);color:#fff;border-radius:var(--r-lg);padding:32px}
+:root[data-theme="dark"] .contact{background:#1B2A6B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .contact{background:#1B2A6B}}
+.contact h2{color:#fff}
+.contact p{color:#D9E0FF}
+.contact a{color:#FFC23D}
+.contact .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.contact .chip{color:#fff;border-color:rgba(255,255,255,.35)}
+footer{margin-top:28px;font-size:.85rem;color:var(--muted)}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,calc(100% + 40px));visibility:hidden;background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:14px;font-family:var(--display);display:flex;align-items:center;gap:12px;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);transition:transform .45s cubic-bezier(.2,.9,.2,1.2);z-index:50;max-width:calc(100% - 32px)}
+.toast.show{transform:translate(-50%,0);visibility:visible}
+.toast .ti{font-size:1.5rem}
+.toast small{display:block;opacity:.75;font-size:.8rem}
+@media (prefers-reduced-motion: reduce){.toast,.opt{transition:none;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ===== Player card ===== -->
+  <aside class="player" aria-label="Profile and progress">
+    <div class="player-top">
+      <button class="avatar" id="avatar" aria-label="Avatar">AB</button>
+      <div>
+        <h1>Amirsiavosh Bashardoust</h1>
+        <div class="role">Doctoral researcher, HEC Lausanne<br>Visiting researcher, Oxford Internet Institute</div>
+      </div>
+    </div>
+
+    <ul class="nav" id="nav">
+      <li><a href="#about">About</a></li>
+      <li><a href="#publications">Papers</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#game">Play</a></li>
+      <li><a href="#path">Path</a></li>
+      <li><a href="#life">Life</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="player-foot">
+      <a class="chip" href="https://scholar.google.co.uk/citations?user=VrAhvyQAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+      <a class="chip" href="https://github.com/vosh-96" target="_blank" rel="noopener">GitHub</a>
+      <button class="chip" id="theme" aria-label="Toggle dark mode">Dark mode</button>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- ===== Hero with live simulation ===== -->
+    <section id="top" aria-label="Introduction">
+      <div class="hero">
+        <canvas id="sim" aria-hidden="true"></canvas>
+        <div class="hero-copy">
+          <h2>How AI changes the way organisations decide and learn</h2>
+          <p>I run experiments and build simulations to study human–AI collaboration, generative-AI tool design, and agentic AI in organisations. Above, people and AI agents take their seats at the same table.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== About ===== -->
+    <section id="about">
+      <h2>About</h2>
+      <p>I am a Ph.D. candidate in Information Systems at HEC Lausanne, University of Lausanne, currently on a research visit at the Oxford Internet Institute, University of Oxford. My research examines how artificial intelligence changes the way organisations decide, learn and organise work. I combine online and lab experiments, large-scale digital-trace and text data, machine learning, and agent-based simulation.</p>
+      <p>Trained first as a mechanical engineer (University of Tehran, EPFL), I work at the intersection of computational social science and human–computer interaction. I pair causal identification in large-scale experiments with NLP, network analysis and computational modelling to study how AI shapes what people believe, share and decide, from misinformation and political attitudes to how AI agents and people learn together. I aim to make this work open and reproducible.</p>
+      <div class="facts">
+        <div class="fact"><strong>4</strong><span>publications in IS and HCI venues</span></div>
+        <div class="fact"><strong>1,358</strong><span>participants in my latest experiments</span></div>
+        <div class="fact"><strong>CHF 23k</strong><span>third-party funding acquired</span></div>
+        <div class="fact"><strong>7</strong><span>master’s theses supervised</span></div>
+      </div>
+    </section>
+
+    <!-- ===== Publications ===== -->
+    <section id="publications">
+      <h2>Publications</h2>
+      <div class="pubs">
+        <article class="pub">
+          <span class="year-tag">2026</span>
+          <div class="venue">European Journal of Information Systems</div>
+          <h3>Design principles for text-to-image generative AI creativity support tools for visual design</h3>
+          <p class="authors">Herath, S., <b>Bashardoust, A.</b>, Bole, Y. &amp; Shrestha, Y. R.</p>
+          <details><summary>What it’s about</summary><p>A design-science study deriving principles for generative image tools that support, rather than replace, the creative process of professional visual designers.</p></details>
+        </article>
+        <article class="pub">
+          <span class="year-tag">2024</span>
+          <div class="venue">Proceedings of the ACM on HCI (CSCW)</div>
+          <h3>Comparing the willingness to share for human-generated vs. AI-generated fake news</h3>
+          <p class="authors"><b>Bashardoust, A.</b>, Feuerriegel, S. &amp; Shrestha, Y. R.</p>
+          <details><summary>What it’s about</summary><p>An experiment testing whether people are more or less willing to share fake news when it was written by AI rather than by humans, with implications for platform policy and misinformation defence.</p></details>
+        </article>
+        <article class="pub">
+          <span class="year-tag">2024</span>
+          <div class="venue">arXiv preprint 2409.12320</div>
+          <h3>The effect of education in prompt engineering: Evidence from journalists</h3>
+          <p class="authors"><b>Bashardoust, A.</b>, Feng, Y., Geissler, D., Feuerriegel, S. &amp; Shrestha, Y. R.</p>
+          <details><summary>What it’s about</summary><p>A field study measuring how a short prompt-engineering training changes the quality of journalists’ work with large language models. <a href="https://arxiv.org/abs/2409.12320" target="_blank" rel="noopener">Read on arXiv</a></p></details>
+        </article>
+        <article class="pub">
+          <span class="year-tag">2023</span>
+          <div class="venue">ICIS 2023 · Best Runner-Up Student Paper</div>
+          <h3>Employing machine learning to advance agent-based modeling in information systems research</h3>
+          <p class="authors"><b>Bashardoust, A.</b>, Safaei, D., Haki, K. &amp; Shrestha, Y. R.</p>
+          <details><summary>What it’s about</summary><p>Shows how machine-learning surrogates and sensitivity analysis make agent-based models of organisations easier to calibrate, explore and interpret.</p></details>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Projects as quests ===== -->
+    <section id="projects">
+      <h2>Current quests</h2>
+      <div class="quests">
+        <article class="quest main">
+          <span class="status boss">Main quest, ready for submission</span>
+          <h3>Interactions with large language models increase support for refugees</h3>
+          <p>Three pre-registered online experiments testing whether brief dialogues with an LLM shift attitudes toward refugees. Empathy-focused dialogue and immersive role-play produced large effects in the UK, replicated in Kenya, with a third study tracing how effects decay over time. Joint work with LMU Munich and HEC Lausanne, prepared for Nature Human Behaviour.</p>
+          <div class="stats">
+            <div><b>1,358</b>participants</div>
+            <div><b>+9.7 pp</b>refugee support</div>
+            <div><b>+5.7 pp</b>policy endorsement</div>
+            <div><b>2</b>countries</div>
+          </div>
+        </article>
+        <article class="quest">
+          <span class="status done">Completed paper, ICIS 2026</span>
+          <h3>From tools to actors: How agentic AI reshapes organizational learning</h3>
+          <p>An agent-based model extending March’s (1991) mutual-learning framework to treat agentic AI as a new kind of organisational learner. The knowledge–diversity trade-off turns out to depend on environmental turbulence and can even reverse.</p>
+          <div class="stats"><div><b>80 × 200</b>runs × periods</div><div><b>Mesa</b>Python</div></div>
+        </article>
+        <article class="quest">
+          <span class="status">In progress</span>
+          <h3>Identity-based bias in LLM task allocation</h3>
+          <p>Controlled experiments on whether labelling an agent as “AI” or “human” changes how an LLM manager allocates work. LLMs systematically favour humans for emotionally intensive tasks.</p>
+          <div class="stats"><div><b>480</b>scenarios</div><div><b>12</b>industries</div></div>
+        </article>
+        <article class="quest">
+          <span class="status">In progress</span>
+          <h3>PTNDataset: Persian news channel dataset</h3>
+          <p>A curated corpus of Telegram posts for social-media research, now used for network analysis of how propaganda spreads.</p>
+          <div class="stats"><div><b>3.6M</b>posts</div><div><b>2,000+</b>channels</div></div>
+        </article>
+        <article class="quest">
+          <span class="status done">Completed, EPFL</span>
+          <h3>AI tutor chatbot for university students</h3>
+          <p>Collected preference data in user studies, fine-tuned an LLM with DPO and added retrieval-augmented generation, then evaluated it with students.</p>
+        </article>
+        <article class="quest">
+          <span class="status done">Completed, EPFL</span>
+          <h3>Knowledge tracing for adaptive learning</h3>
+          <p>Implemented Bayesian, deep and graph-based knowledge-tracing models to understand how learners interact with educational software.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== Career quiz ===== -->
+    <section id="game">
+      <h2>How well do you know my path?</h2>
+      <div class="game">
+        <div id="quizIntro">
+          <p>Ten questions about my research, projects and career, all answerable from this page. Each correct answer is worth 100 points, plus up to 50 for answering fast. Get several right in a row and your streak multiplies the score.</p>
+          <p class="muted" id="bestLine"></p>
+          <button class="btn" id="startQuiz">Start the quiz</button>
+        </div>
+        <div id="quizBody" hidden>
+          <div class="game-bar">
+            <span>Question <b id="qNum">1</b> of <b id="qTot">10</b></span>
+            <span>Streak <b id="streak">×1</b> &nbsp; Score <b id="score">0</b></span>
+          </div>
+          <div class="timer" aria-hidden="true"><span id="timerFill"></span></div>
+          <h3 class="q" id="qText"></h3>
+          <div class="opts" id="opts"></div>
+          <div class="explain" id="explain" role="status" aria-live="polite"></div>
+          <button class="btn" id="nextQ" hidden>Next question</button>
+        </div>
+        <div class="verdict" id="verdict" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ===== Path: education & experience ===== -->
+    <section id="path">
+      <h2>The path so far</h2>
+      <div class="two">
+        <div>
+          <p class="subhead">Research and work</p>
+          <ol class="timeline" reversed>
+            <li class="now"><span class="when">2026 – present</span><h3>Visiting researcher, Oxford Internet Institute, University of Oxford</h3><p>Research visit supported by the Fondation pour l’Université de Lausanne.</p></li>
+            <li class="now"><span class="when">Dec 2022 – present</span><h3>Doctoral researcher, HEC Lausanne</h3><p>Field, lab and online experiments and user studies on human–AI collaboration and generative-AI tool design.</p></li>
+            <li><span class="when">Mar – Sep 2022</span><h3>MedTech medical safety intern, Johnson &amp; Johnson</h3><p>Digitalised the project management framework of the medical safety office.</p></li>
+            <li><span class="when">Jul 2021 – Mar 2022</span><h3>Research assistant, EPFL Biomechanical Orthopedics</h3><p>Automated finite-element simulations and built an ML dataset for prosthesis recommendation.</p></li>
+            <li><span class="when">Aug 2020 – Feb 2021</span><h3>Algorithm development intern, AO Foundation</h3><p>Image-processing pipeline for automated fracture detection.</p></li>
+          </ol>
+        </div>
+        <div>
+          <p class="subhead">Education</p>
+          <ol class="timeline" reversed>
+            <li class="now"><span class="when">2022 – present</span><h3>Ph.D. Information Systems, University of Lausanne</h3><p>Thesis: Mixed-methods approaches to evaluate and design generative AI tools.</p></li>
+            <li><span class="when">2019 – 2022</span><h3>M.Sc. Mechanical Engineering, EPFL</h3><p>Minor in Management, Technology and Entrepreneurship.</p></li>
+            <li><span class="when">2014 – 2019</span><h3>B.Sc. Mechanical Engineering, University of Tehran</h3></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="two" style="margin-top:36px">
+        <div>
+          <p class="subhead">Grants and awards</p>
+          <ul class="plain">
+            <li><span class="amt">CHF 10,000</span><b>Workshop grant</b>, Hasler Stiftung, Fondation Aventinus and FUL: Fighting disinformation in the age of AI (2026, co-applicant)</li>
+            <li><span class="amt">CHF 3,000</span><b>Research visit grant</b>, FUL, University of Oxford (2026)</li>
+            <li><span class="amt">CHF 6,000</span><b>HEC Lausanne research grants</b> (2024, 2025)</li>
+            <li><span class="amt">CHF 3,000</span><b>Research grant</b>, Fondation pour l’Université de Lausanne (2025)</li>
+            <li><span class="amt">CHF 1,000</span><b>Travel subsidy</b>, Swiss Academy of Humanities and Social Sciences (2023)</li>
+            <li><b>Best Runner-Up Student Paper Award</b>, ICIS (2023)</li>
+            <li><b>Best Teaching Award</b>, Managing AI in Organizations, HEC Lausanne (2023)</li>
+          </ul>
+        </div>
+        <div>
+          <p class="subhead">Teaching and supervision</p>
+          <ul class="plain">
+            <li><b>Head TA, Managing AI in Organizations</b> (MSc), HEC Lausanne, 2022–2026. Designed assignments, projects and exams; coordinated industry guest lectures.</li>
+            <li><b>TA, Design for X</b> (MSc), EPFL, 2020–2022</li>
+            <li><b>TA, Design of Machine Parts and Statics</b> (BSc), University of Tehran, 2016–2019</li>
+            <li><b>Seven master’s theses</b> supervised, including projects with Ubisoft and KPMG on generative AI for concept art, multi-agent IT audit, LLM bias in task allocation, and misinformation detection with local models.</li>
+          </ul>
+          <p class="subhead" style="margin-top:24px">Reviewing</p>
+          <p style="font-size:.95rem">KDD, ICIS, CHI, ICWSM and CSCW (2024–2026)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Personal ===== -->
+    <section id="life">
+      <h2>Off the clock</h2>
+      <p>Research takes most of my time. Here is what fills the rest.</p>
+      <div class="side-quests">
+        <article class="side">
+          <span class="side-ico" aria-hidden="true">🗡️</span>
+          <h3>Middle-earth</h3>
+          <p>I am completely obsessed with The Lord of the Rings: the books, the films, the maps and the languages. Ask me about it at your own risk, because I will not stop.</p>
+        </article>
+        <article class="side">
+          <span class="side-ico" aria-hidden="true">🏰</span>
+          <h3>Real-time strategy</h3>
+          <p>Scouting, build orders and deciding where to spend scarce resources under pressure. RTS games were my first lesson in exploration versus exploitation, long before I read about it.</p>
+        </article>
+        <article class="side">
+          <span class="side-ico" aria-hidden="true">⛰️</span>
+          <h3>Hiking</h3>
+          <p>Living near the Alps made hiking a habit. A long trail is still where I think most clearly about a stuck paper.</p>
+        </article>
+        <article class="side">
+          <span class="side-ico" aria-hidden="true">🎞️</span>
+          <h3>Classic cinema</h3>
+          <p>I am obsessed with classic films and will happily watch an old black-and-white film over a new release. Recommendations are always welcome.</p>
+        </article>
+      </div>
+      <p class="muted hint">Some say there is a door on this page that opens only for friends.</p>
+    </section>
+
+    <!-- ===== Skill tree ===== -->
+    <section id="skills">
+      <h2>Skill tree</h2>
+      <div class="tree" id="tree"></div>
+    </section>
+
+    <!-- ===== Contact ===== -->
+    <section id="contact">
+      <div class="contact">
+        <h2>Let’s collaborate</h2>
+        <p>I am happy to talk about experiments on human–AI interaction, agentic AI in organisations, misinformation, or co-supervising student projects.</p>
+        <p><a href="mailto:amirsiavosh.bashardoust@unil.ch">amirsiavosh.bashardoust@unil.ch</a><br>HEC Lausanne, University of Lausanne, Switzerland<br>Currently visiting the Oxford Internet Institute, University of Oxford</p>
+        <div class="row">
+          <a class="chip" href="https://scholar.google.co.uk/citations?user=VrAhvyQAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+          <a class="chip" href="https://github.com/vosh-96" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+      <footer>English (fluent), Persian (native), French (learning). Built by hand, no trackers. Your progress on this page stays in your own browser.</footer>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="ti" id="toastIco"></span><div><span id="toastTitle"></span><small id="toastText"></small></div></div>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const store = {
+    get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+    set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+
+  /* ---------------- Achievements & XP ---------------- */
+  const ACH = [
+    {id:'start',   ico:'🚀', t:'First steps',      d:'Scrolled past the intro',              xp:10},
+    {id:'reader',  ico:'📖', t:'Peer reviewer',     d:'Opened a paper summary',               xp:15},
+    {id:'quest',   ico:'🗺️', t:'Quest log',         d:'Checked the current projects',         xp:10},
+    {id:'friend',  ico:'💍', t:'Speak, friend',     d:'Typed the elvish word for friend',       xp:15},
+    {id:'player',  ico:'🎲', t:'Quiz taker',        d:'Finished the career quiz',             xp:20},
+    {id:'optimal', ico:'🏆', t:'Inner circle',      d:'Got at least 8 of 10 quiz questions right',xp:25},
+    {id:'night',   ico:'🌙', t:'Night shift',       d:'Switched the colour theme',             xp:5},
+    {id:'all',     ico:'🧭', t:'Cartographer',      d:'Visited every section',                 xp:25},
+    {id:'secret',  ico:'✨', t:'Easter egg',        d:'Clicked the avatar five times',         xp:10},
+  ];
+  const MAX = ACH.reduce((s,a)=>s+a.xp,0);
+  let got = store.get('ab-ach', []);
+  function render(){}
+  let toastTimer;
+  function unlock(id){
+    if (got.includes(id)) return;
+    got.push(id); store.set('ab-ach', got); render();
+    const a = ACH.find(x=>x.id===id);
+    document.getElementById('toastIco').textContent = a.ico;
+    document.getElementById('toastTitle').textContent = 'Achievement unlocked: ' + a.t;
+    document.getElementById('toastText').textContent = a.d;
+    const t = document.getElementById('toast');
+    t.classList.add('show'); clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'), 3200);
+  }
+  render();
+
+  /* Section tracking */
+  const ids = ['about','publications','projects','game','path','life','contact'];
+  let seen = store.get('ab-seen', []);
+  const navLinks = [...document.querySelectorAll('#nav a')];
+  function markNav(){ navLinks.forEach(l => l.classList.toggle('seen', seen.includes(l.getAttribute('href').slice(1)))); }
+  markNav();
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id = e.target.id;
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#'+id));
+      if (!seen.includes(id)){ seen.push(id); store.set('ab-seen', seen); markNav(); }
+      if (id === 'about') unlock('start');
+      if (id === 'projects') unlock('quest');
+      if (ids.every(i => seen.includes(i))) unlock('all');
+    });
+  }, {rootMargin:'-35% 0px -55% 0px'});
+  ids.forEach(i => io.observe(document.getElementById(i)));
+
+  document.querySelectorAll('.pub details').forEach(d => d.addEventListener('toggle', () => { if (d.open) unlock('reader'); }));
+
+  /* Theme */
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('theme');
+  const saved = store.get('ab-theme', null);
+  if (saved) root.dataset.theme = saved;
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const label = () => themeBtn.textContent = isDark() ? 'Light mode' : 'Dark mode';
+  label();
+  themeBtn.addEventListener('click', () => {
+    root.dataset.theme = isDark() ? 'light' : 'dark';
+    store.set('ab-theme', root.dataset.theme); label(); unlock('night');
+  });
+
+  /* Easter egg: speak, friend, and enter */
+  let typed = '';
+  addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea') || e.key.length !== 1) return;
+    typed = (typed + e.key.toLowerCase()).slice(-6);
+    if (typed === 'mellon') unlock('friend');
+  });
+
+  /* Easter egg */
+  let clicks = 0;
+  document.getElementById('avatar').addEventListener('click', () => { if (++clicks >= 5) unlock('secret'); });
+
+  /* ---------------- Hero animation: people and AI agents gather at a table ---------------- */
+  const cv = document.getElementById('sim'), ctx = cv.getContext('2d');
+  const DPR = Math.min(2, devicePixelRatio || 1);
+  let W, H, T, seats = [], agents = [], lastSwap = 0;
+  const C = {table:'rgba(217,224,255,.16)', edge:'rgba(217,224,255,.45)', chair:'rgba(217,224,255,.22)', human:'#4FD1C5', ai:'#FFC23D', talk:'rgba(255,255,255,.85)'};
+  function layout(){
+    const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = W*DPR; cv.height = H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+    const narrow = W < 640;
+    const tw = Math.min(narrow ? W*.62 : W*.34, 340), th = Math.min(64, tw*.24);
+    T = {x: narrow ? W*.5 : W*.7, y: Math.max(84, H*.19), w: tw, h: th};
+    const n = 4; seats = [];
+    for (let i=0;i<n;i++){
+      const x = T.x - tw/2 + tw*(i+.5)/n;
+      seats.push({x, y:T.y - th/2 - 22, side:-1});
+      seats.push({x, y:T.y + th/2 + 22, side: 1});
+    }
+    seats.push({x:T.x - tw/2 - 26, y:T.y, side:0}, {x:T.x + tw/2 + 26, y:T.y, side:0});
+  }
+  function spawnPoint(){
+    const e = Math.floor(Math.random()*3);
+    return e === 0 ? {x:-20, y:Math.random()*H*.45} : e === 1 ? {x:W+20, y:Math.random()*H*.45} : {x:Math.random()*W, y:-20};
+  }
+  function makeAgent(seat, delay){
+    const sp = spawnPoint();
+    return {x:sp.x, y:sp.y, seat, ai: Math.random() < .45, state:'walk', t0: performance.now()+delay, from:sp, dur: 2200+Math.random()*1600, bob: Math.random()*6};
+  }
+  function seed(){
+    layout();
+    agents = seats.map((s,i) => makeAgent(i, i*450));
+  }
+  const ease = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+  function update(now){
+    for (const a of agents){
+      const s = seats[a.seat];
+      if (a.state === 'walk' || a.state === 'leave'){
+        const k = Math.min(1, Math.max(0, (now - a.t0)/a.dur));
+        const to = a.state === 'walk' ? s : a.to, fr = a.state === 'walk' ? a.from : s;
+        const e = ease(k);
+        a.x = fr.x + (to.x - fr.x)*e;
+        a.y = fr.y + (to.y - fr.y)*e - Math.sin(k*Math.PI)*14;
+        if (k >= 1) a.state = a.state === 'walk' ? 'sit' : 'gone';
+      } else if (a.state === 'sit'){ a.x = s.x; a.y = s.y; }
+    }
+    // occasionally someone leaves and a newcomer takes the seat
+    if (now - lastSwap > 4200 && agents.every(a => a.state === 'sit')){
+      lastSwap = now;
+      const i = Math.floor(Math.random()*agents.length), a = agents[i];
+      a.state = 'leave'; a.t0 = now; a.to = spawnPoint(); a.dur = 2000;
+      setTimeout(() => { agents[i] = makeAgent(a.seat, 0); }, 2100);
+    }
+  }
+  function drawAgent(a, now){
+    const sitting = a.state === 'sit';
+    const step = sitting ? 0 : Math.sin((now/120) + a.bob)*1.5;
+    ctx.save(); ctx.translate(a.x, a.y + step);
+    ctx.fillStyle = a.ai ? C.ai : C.human;
+    if (a.ai){
+      // AI agent: rounded square head with antenna
+      ctx.beginPath(); ctx.roundRect(-7,-17,14,12,3); ctx.fill();
+      ctx.fillRect(-.75,-22,1.5,5); ctx.beginPath(); ctx.arc(0,-23,2,0,Math.PI*2); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.arc(0,-11,6.5,0,Math.PI*2); ctx.fill();
+    }
+    ctx.beginPath(); ctx.roundRect(-8,-3,16, sitting ? 10 : 14, 6); ctx.fill();
+    ctx.restore();
+  }
+  function draw(now){
+    ctx.clearRect(0,0,W,H);
+    // chairs
+    ctx.fillStyle = C.chair;
+    for (const s of seats){ ctx.beginPath(); ctx.roundRect(s.x-11, s.y-4, 22, 14, 5); ctx.fill(); }
+    // agents behind the table first (top row), then table, then front row
+    const back = agents.filter(a => !(a.state==='sit' && seats[a.seat].side === 1));
+    const front = agents.filter(a => a.state==='sit' && seats[a.seat].side === 1);
+    back.forEach(a => drawAgent(a, now));
+    ctx.fillStyle = C.table; ctx.strokeStyle = C.edge; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(T.x-T.w/2, T.y-T.h/2, T.w, T.h, T.h/2); ctx.fill(); ctx.stroke();
+    front.forEach(a => drawAgent(a, now));
+    // conversation: a speech bubble with typing dots over one seated agent at a time
+    const seated = agents.filter(a => a.state === 'sit');
+    if (seated.length > 2){
+      const sp = seated[Math.floor(now/1800) % seated.length];
+      const bx = sp.x + 12, by = sp.y - 40;
+      ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.beginPath(); ctx.roundRect(bx, by, 30, 16, 8); ctx.fill();
+      for (let d=0; d<3; d++){
+        const on = Math.floor(now/300) % 3 === d;
+        ctx.fillStyle = on ? C.talk : 'rgba(255,255,255,.4)';
+        ctx.beginPath(); ctx.arc(bx+8+d*7, by+8, 2, 0, Math.PI*2); ctx.fill();
+      }
+    }
+  }
+  const reduceMotion = reduce;
+  let running = false, raf;
+  function loop(now){ update(now); draw(now); if (running) raf = requestAnimationFrame(loop); }
+  seed();
+  if (reduceMotion){ agents.forEach(a => { a.state='sit'; a.x=seats[a.seat].x; a.y=seats[a.seat].y; }); draw(0); }
+  addEventListener('resize', () => { layout(); if (reduceMotion){ agents.forEach(a=>{a.x=seats[a.seat].x; a.y=seats[a.seat].y;}); draw(0); } });
+  new IntersectionObserver(([e]) => {
+    if (reduceMotion) return;
+    if (e.isIntersecting && !running){ running = true; raf = requestAnimationFrame(loop); }
+    else if (!e.isIntersecting){ running = false; cancelAnimationFrame(raf); }
+  }).observe(cv);
+
+  /* ---------------- Career quiz ---------------- */
+  const QS = [
+    {q:'Before moving into Information Systems, what did I study for my bachelor’s and master’s?', o:['Mechanical engineering','Computer science','Economics','Physics'], a:0, e:'Mechanical engineering, at the University of Tehran and then EPFL, with a minor in management and entrepreneurship.'},
+    {q:'Where am I currently a visiting researcher?', o:['Oxford Internet Institute','MIT Media Lab','Stanford HAI','ETH Zurich'], a:0, e:'I am on a research visit at the Oxford Internet Institute, University of Oxford.'},
+    {q:'Which classic framework does my ICIS 2026 agent-based model of agentic AI build on?', o:['March’s exploration–exploitation model','Porter’s five forces','Nash bargaining','Maslow’s hierarchy of needs'], a:0, e:'It extends March’s (1991) mutual-learning model, treating agentic AI as a new kind of organisational learner.'},
+    {q:'My refugee-attitude experiments were run in the UK and replicated in which other country?', o:['Kenya','Germany','Brazil','India'], a:0, e:'Kenya, to test whether the effects hold outside WEIRD samples.'},
+    {q:'Roughly how many Telegram posts are in the PTNDataset?', o:['3.6 million','360,000','36 million','1.2 million'], a:0, e:'3.6 million posts from more than 2,000 Persian news channels.'},
+    {q:'What did my ICIS 2023 paper on machine learning and agent-based modelling win?', o:['Best Runner-Up Student Paper','Best Paper of the Conference','Best Reviewer Award','Best Theory Paper'], a:0, e:'It received the Best Runner-Up Student Paper Award.'},
+    {q:'At which organisation did I build a pipeline for automated fracture detection in medical images?', o:['AO Foundation, Davos','Johnson & Johnson, Zug','CERN, Geneva','Roche, Basel'], a:0, e:'At the AO Foundation in Davos, as an algorithm development intern.'},
+    {q:'Which technique did I use to fine-tune the AI tutor chatbot at EPFL?', o:['Direct Preference Optimization (DPO)','Reinforcement learning with PPO only','Knowledge distillation','No fine-tuning, prompting only'], a:0, e:'DPO on preference data collected in user studies, combined with retrieval-augmented generation.'},
+    {q:'In the LLM task-allocation study, which agents did models favour for emotionally intensive tasks?', o:['Agents labelled as human','Agents labelled as AI','Neither, allocation was random','Whoever was listed first'], a:0, e:'LLMs systematically favoured agents labelled as human for emotionally intensive tasks, across 480 scenarios.'},
+    {q:'What was my very first teaching job?', o:['Physics tutor at a high school in Tehran','Statistics TA at EPFL','Python instructor at a bootcamp','French tutor in Lausanne'], a:0, e:'Physics tutor at Salam High School in Tehran, back in 2014.'},
+  ];
+  const TIME = 15000;
+  const RANKS = [[0,'New acquaintance'],[500,'Conference contact'],[1100,'Office neighbour'],[1800,'Co-author'],[2600,'Thesis committee member']];
+  let order, qi, score, streak, correct, tStart, tRaf, answered;
+  const $ = id => document.getElementById(id);
+  const shuffle = arr => arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+  const bestLine = () => { const b = store.get('ab-quizbest', 0); $('bestLine').textContent = b ? 'Your best score so far: '+b+' points.' : ''; };
+  bestLine();
+  function startQuiz(){
+    order = shuffle(QS.map((q,i)=>i)); qi = 0; score = 0; streak = 0; correct = 0;
+    $('quizIntro').hidden = true; $('quizBody').hidden = false;
+    $('verdict').classList.remove('show'); $('qTot').textContent = QS.length;
+    showQ();
+  }
+  function showQ(){
+    const Q = QS[order[qi]]; answered = false;
+    $('qNum').textContent = qi+1; $('score').textContent = score; $('streak').textContent = '×'+Math.max(1,mult());
+    $('qText').textContent = Q.q; $('explain').innerHTML = ''; $('nextQ').hidden = true;
+    const opts = shuffle(Q.o.map((t,i)=>({t,i})));
+    $('opts').innerHTML = '';
+    opts.forEach(o => {
+      const b = document.createElement('button'); b.className = 'opt'; b.textContent = o.t; b.dataset.i = o.i;
+      b.addEventListener('click', () => answer(o.i));
+      $('opts').appendChild(b);
+    });
+    tStart = performance.now(); cancelAnimationFrame(tRaf); tick();
+    $('opts').firstChild.focus({preventScroll:true});
+  }
+  function mult(){ return streak >= 4 ? 3 : streak >= 2 ? 2 : 1; }
+  function tick(){
+    const left = Math.max(0, 1 - (performance.now()-tStart)/TIME);
+    $('timerFill').style.width = (left*100)+'%';
+    if (left <= 0 && !answered) return answer(-1);
+    if (!answered) tRaf = requestAnimationFrame(tick);
+  }
+  function answer(i){
+    if (answered) return; answered = true; cancelAnimationFrame(tRaf);
+    const Q = QS[order[qi]], ok = i === Q.a;
+    const elapsed = performance.now()-tStart;
+    let gained = 0;
+    if (ok){ streak++; correct++; gained = Math.round((100 + 50*Math.max(0,1-elapsed/TIME)) * mult()); score += gained; }
+    else streak = 0;
+    [...$('opts').children].forEach(b => {
+      b.disabled = true;
+      if (+b.dataset.i === Q.a) b.classList.add('right');
+      else if (+b.dataset.i === i) b.classList.add('wrong');
+    });
+    $('score').textContent = score; $('streak').textContent = '×'+Math.max(1,mult());
+    $('explain').innerHTML = (ok ? `<b>Correct, +${gained} points.</b> ` : i === -1 ? '<b>Time’s up.</b> ' : '<b>Not quite.</b> ') + Q.e;
+    const nb = $('nextQ'); nb.hidden = false; nb.textContent = qi === QS.length-1 ? 'See my result' : 'Next question'; nb.focus({preventScroll:true});
+  }
+  function next(){ if (++qi < QS.length) showQ(); else finish(); }
+  function finish(){
+    $('quizBody').hidden = true; $('quizIntro').hidden = false;
+    $('startQuiz').textContent = 'Play again';
+    const best = Math.max(score, store.get('ab-quizbest', 0)); store.set('ab-quizbest', best); bestLine();
+    const rank = RANKS.filter(r => score >= r[0]).pop()[1];
+    $('verdict').innerHTML = `<strong>${score} points, ${correct} of ${QS.length} correct.</strong> Your rank: <strong>${rank}</strong>.<br>${correct >= 8 ? 'You clearly read the page closely. Let’s talk about collaborating.' : 'Scroll through the projects and papers above, then try again for a higher rank.'}`;
+    $('verdict').classList.add('show');
+    unlock('player'); if (correct >= 8) unlock('optimal');
+  }
+  $('startQuiz').addEventListener('click', startQuiz);
+  $('nextQ').addEventListener('click', next);
+
+  /* ---------------- Skill tree ---------------- */
+  const TREE = [
+    ['Research methods', [['Field and lab experiments',5],['Causal inference',4],['Agent-based simulation',5],['User studies and usability testing',4]]],
+    ['AI and machine learning', [['LLM post-training (DPO) and fine-tuning',4],['NLP and text analysis',4],['Statistical analysis',5],['Retrieval-augmented generation',3]]],
+    ['Programming', [['Python (PyTorch, scikit-learn, Mesa)',5],['R and MATLAB',4],['C++',3],['Git and LaTeX',4]]],
+  ];
+  document.getElementById('tree').innerHTML = TREE.map(([b, skills]) =>
+    `<div class="branch"><h3>${b}</h3>${skills.map(([s,n]) =>
+      `<div class="skill">${s}<div class="pips" role="img" aria-label="${n} of 5">${'<i class="f"></i>'.repeat(n)}${'<i></i>'.repeat(5-n)}</div></div>`).join('')}</div>`
+  ).join('');
+})();
+</script>
+</body>
+</html>
